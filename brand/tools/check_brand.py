@@ -26,6 +26,7 @@ import build_brand as B  # noqa: E402
 from wcag import contrast  # noqa: E402
 
 SVG_NS = "{http://www.w3.org/2000/svg}"
+GITHUB_LIGHT, GITHUB_DARK = "#FFFFFF", "#0D1117"  # README grounds in GitHub's light and dark themes
 failures = []
 
 
@@ -47,12 +48,23 @@ def expected_files():
         out += [(f"png/cassandra-mark-small-{v}-{px}.png", (px, px), True) for px in (16, 24, 32)]
         for kind in ("horizontal", "compact", "stacked"):
             out += [(f"png/cassandra-{kind}-{v}{s}.png", None, True) for s in ("", "@2x", "@4x")]
+    for v in B.PROJECT_MARK_VARIANTS:
+        stem = f"cassandra-mark-{v}"
+        out += [(f"svg/{stem}.svg", None, False), (f"pdf/{stem}.pdf", None, False),
+                (f"eps/{stem}.eps", None, False), (f"source/{stem}.vectorcraft", None, False)]
+        out += [(f"png/{stem}-{px}.png", (px, px), True) for px in (64, 128, 256, 512, 1024)]
+        out += [(f"svg/cassandra-mark-small-{v}.svg", None, False),
+                (f"source/cassandra-mark-small-{v}.vectorcraft", None, False)]
+        out += [(f"png/cassandra-mark-small-{v}-{px}.png", (px, px), True) for px in (16, 24, 32)]
     out += [("web/favicon.svg", None, False)] + [(f"web/favicon-{px}.png", (px, px), True) for px in (16, 32, 48)]
     out += [("web/app-icon.svg", None, False)] + [(f"web/app-icon-{px}.png", (px, px), False) for px in (180, 192, 512)]
     out += [("web/avatar.svg", None, False), ("web/avatar-500.png", (500, 500), False),
             ("web/avatar-1024.png", (1024, 1024), False)]
     out += [("web/social-card.svg", None, False), ("web/social-card.png", (1280, 640), False)]
     out += [(f"source/{n}.vectorcraft", None, False) for n in ("favicon", "app-icon", "avatar", "social-card")]
+    for k in B.PROJECT_CARDS:
+        out += [(f"web/social-card-{k}.svg", None, False), (f"web/social-card-{k}.png", (1280, 640), False),
+                (f"source/social-card-{k}.vectorcraft", None, False)]
     out += [(f"guide/{n}", None, False) for n in ("palette.svg", "palette.png", "construction.svg",
                                                    "construction.png", "clear-space.svg", "clear-space.png",
                                                    "brand-board.png")]
@@ -81,6 +93,12 @@ def png_info(p):
 
 
 def allowed_colours(rel):
+    for pv, v in B.PROJECT_MARK_VARIANTS.items():
+        if f"-{pv}." in rel or f"-{pv}-" in rel:
+            return {v["c"], v["dash"]}
+    for key, spec in B.PROJECT_CARDS.items():
+        if rel == f"web/social-card-{key}.svg":
+            return set(B.CARD_PALETTES[spec["palette"]].values())
     for vname, v in B.VARIANTS.items():
         if f"-{vname}." in rel or rel.endswith(f"-{vname}.svg"):
             return {v["c"], v["dash"], v["text"], v["desc"]}
@@ -147,7 +165,14 @@ def main():
               ("on-dark text: Ivory on Night", B.IVORY, B.NIGHT, 4.5),
               ("on-dark descriptor text: Gold on Night", B.GOLD, B.NIGHT, 4.5),
               ("on-dark dashes: Gold on Night", B.GOLD, B.NIGHT, 3.0),
-              ("black on white", B.BLACK, B.WHITE, 4.5), ("white on black", B.WHITE, B.BLACK, 4.5)]
+              ("black on white", B.BLACK, B.WHITE, 4.5), ("white on black", B.WHITE, B.BLACK, 4.5),
+              ("red-figure card text: Clay on Kiln", B.CLAY, B.KILN, 4.5),
+              ("red-figure card dashes: Terracotta on Kiln", B.TERRACOTTA, B.KILN, 3.0),
+              ("red-figure card kicker (large text, at least 24 px): Terracotta on Kiln", B.TERRACOTTA, B.KILN, 3.0),
+              ("red-figure mark on light: Kiln on GitHub white", B.KILN, GITHUB_LIGHT, 3.0),
+              ("red-figure mark on light: Terracotta on GitHub white", B.TERRACOTTA, GITHUB_LIGHT, 3.0),
+              ("red-figure mark on dark: Clay on GitHub dark", B.CLAY, GITHUB_DARK, 3.0),
+              ("red-figure mark on dark: Terracotta on GitHub dark", B.TERRACOTTA, GITHUB_DARK, 3.0)]
     for name, a, b, target in ratios:
         r = contrast(a, b)
         print(f"  {name}: {r:.2f}:1 (target {target}:1)")

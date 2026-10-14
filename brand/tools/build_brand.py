@@ -25,6 +25,15 @@ DIRS = {k: os.path.join(BRAND, k) for k in ("svg", "pdf", "eps", "png", "web", "
 # Palette "Bronze and night" (owner decision 2026-10-14).
 NIGHT, BRONZE, GOLD, IVORY = "#121C2E", "#8A672B", "#D2A65A", "#F4EFE6"
 BLACK, WHITE = "#000000", "#FFFFFF"
+# Palette "Red-figure", for the CASSANDRA and CASSANDRA-Chorus project materials (owner, 2026-10-14).
+KILN, TERRACOTTA, CLAY = "#1A1411", "#B2462A", "#F3EBDD"
+# The mark (full and small) in the Red-figure palette, for the CASSANDRA and CASSANDRA-Chorus
+# README headers and other project material. Only the mark: the lockups say COLLECTIVE and
+# stay in the organisation's palette.
+PROJECT_MARK_VARIANTS = {
+    "red-figure-on-light": dict(c=KILN, dash=TERRACOTTA),
+    "red-figure-on-dark": dict(c=CLAY, dash=TERRACOTTA),
+}
 
 # Colour variants: C = the ring, dash = the forecast, text = wordmark, desc = descriptor.
 VARIANTS = {
@@ -52,6 +61,27 @@ CLEAR_SPACE = 0.25  # of H, on every side
 
 # Owner decision 2026-10-14 (candidate B of three).
 TAGLINE = "Language models for everyday hardware."
+
+# Social preview cards of the project repositories (owner decision 2026-10-14: one card per
+# repository; Ephesus keeps its own). The card line is the short form of each repository's
+# description, broken by hand into lines that fit the text column.
+CARD_PALETTES = {
+    "bronze-night": dict(ground=NIGHT, c=IVORY, dash=GOLD, kicker=GOLD, text=IVORY),
+    "red-figure": dict(ground=KILN, c=CLAY, dash=TERRACOTTA, kicker=TERRACOTTA, text=CLAY),
+}
+PROJECT_CARDS = {
+    "cassandra": dict(palette="red-figure", name=["CASSANDRA"],
+                      line=["Language-model research", "on consumer hardware."]),
+    "chorus": dict(palette="red-figure", name=["CASSANDRA", "CHORUS"],
+                   line=["One MoE language model trained", "across volunteer machines."]),
+    "dervish": dict(palette="bronze-night", name=["DERVISH"],
+                    line=["A Muon-variant optimizer with", "a provably bounded spectrum."]),
+}
+KICKER = dict(text="CASSANDRA COLLECTIVE", font="Inter", style="Medium", tracking=350)
+# kicker_h 19 sets the kicker at about 26 px, WCAG "large text" (24 px and up), where 3:1 is enough
+# for terracotta on kiln black (3.30:1); build_project_cards checks this.
+CARD = dict(mark_d=300, mark_cx=290, text_x=520, text_w=650, kicker_h=19, name_h=62, name_lead=1.45,
+            line_size=32, line_lead=1.4, gap_kicker=30, gap_name=40)
 
 
 # ---------------------------------------------------------------- geometry
@@ -200,8 +230,8 @@ def export(vc, stem, vector=True, pdf_eps=True, png=(), web=False, source=True):
     return out
 
 
-def build_marks(vc):
-    for vname, v in VARIANTS.items():
+def build_marks(vc, variants=None):
+    for vname, v in (variants or VARIANTS).items():
         new_doc(vc, f"mark-{vname}", 512, 512, "CASSANDRA mark", f"The Forecast mark, {vname} colours.")
         draw_mark(vc, 256, 256, 512, v)
         export(vc, f"cassandra-mark-{vname}", png=[(f"-{px}", px / 512) for px in (64, 128, 256, 512, 1024)])
@@ -257,6 +287,48 @@ def build_web(vc):
     t, b = free_text(vc, TAGLINE, 40, IVORY)
     set_box(vc, t, (1280 - b["width"]) / 2, 425, b["width"], b["height"])
     export(vc, "social-card", pdf_eps=False, web=True, png=[("", 1)])
+
+
+def build_project_cards(vc):
+    """One 1280 x 640 social card per project repository: the mark on the left; on the right
+    a gold kicker, the project name in the wordmark's type, and the card line in Inter, the
+    whole text block centred vertically on the card. Raises if a line overflows the column."""
+    c = CARD
+    for key, spec in PROJECT_CARDS.items():
+        pal = CARD_PALETTES[spec["palette"]]
+        v = dict(c=pal["c"], dash=pal["dash"])
+        new_doc(vc, f"social-card-{key}", 1280, 640, f"{' '.join(spec['name'])} social card",
+                " ".join(spec["line"]))
+        rect(vc, 0, 0, 1280, 640, pal["ground"])
+        draw_mark(vc, c["mark_cx"], 320, c["mark_d"], v)
+        name_step = c["name_h"] * c["name_lead"]
+        line_step = c["line_size"] * c["line_lead"]
+        lines = [free_text(vc, t, c["line_size"], pal["text"]) for t in spec["line"]]
+        line_h = max(b["height"] for _, b in lines)
+        block = (c["kicker_h"] + c["gap_kicker"] + c["name_h"] + name_step * (len(spec["name"]) - 1)
+                 + c["gap_name"] + line_h + line_step * (len(lines) - 1))
+        y = 320 - block / 2
+        k, kw, _ = text_line(vc, KICKER, c["kicker_h"], pal["kicker"], c["text_x"], y)
+        probe, pb = outlined(vc, KICKER, 100, pal["kicker"], KICKER["tracking"])
+        kicker_size = 100 * c["kicker_h"] / pb["height"]
+        delete(vc, [probe])
+        if contrast(pal["kicker"], pal["ground"]) < 4.5 and kicker_size < 24:
+            raise ValueError(f"card {key}: kicker at {kicker_size:.1f} px needs 4.5:1, has "
+                             f"{contrast(pal['kicker'], pal['ground']):.2f}:1")
+        print(f"  card {key}: {spec['palette']}, kicker {kicker_size:.1f} px, "
+              f"kicker contrast {contrast(pal['kicker'], pal['ground']):.2f}:1")
+        y += c["kicker_h"] + c["gap_kicker"]
+        widths = [kw]
+        for i, word in enumerate(spec["name"]):
+            _, w, _ = text_line(vc, dict(WORDMARK, text=word), c["name_h"], pal["text"], c["text_x"], y + i * name_step)
+            widths.append(w)
+        y += c["name_h"] + name_step * (len(spec["name"]) - 1) + c["gap_name"]
+        for i, (gid, b) in enumerate(lines):
+            set_box(vc, gid, c["text_x"], y + i * line_step, b["width"], b["height"])
+            widths.append(b["width"])
+        if max(widths) > c["text_w"]:
+            raise ValueError(f"card {key}: a line is {max(widths):.0f} px wide, the column is {c['text_w']} px")
+        export(vc, f"social-card-{key}", pdf_eps=False, web=True, png=[("", 1)])
 
 
 def build_guide(vc):
@@ -359,8 +431,10 @@ def main():
         os.makedirs(d, exist_ok=True)
     with VC(BRAND) as vc:
         build_marks(vc)
+        build_marks(vc, PROJECT_MARK_VARIANTS)
         build_lockups(vc)
         build_web(vc)
+        build_project_cards(vc)
         build_guide(vc)
         build_board(vc)
     print("done")
