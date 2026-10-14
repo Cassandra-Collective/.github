@@ -7,7 +7,8 @@ Checks, each over ALL files of its kind (not a sample):
   1. Every expected file exists (the list is derived from build_brand's tables).
   2. Every SVG parses, has a <title> and a viewBox, contains no <text> (all type outlined),
      no <image> and no external references, and uses only its variant's colours.
-  3. Every PNG has the expected pixel size; the transparent sets have an alpha channel.
+  3. Every PNG has the expected pixel size; the transparent sets are 8-bit RGBA with a fully
+     transparent top-left pixel (always background in these layouts).
   4. The palette meets its WCAG targets for every variant's use.
   5. The dash arithmetic of the mark fills the opening exactly.
 Exits 1 on the first failed group, after printing every failure in it.
@@ -17,6 +18,7 @@ import re
 import struct
 import sys
 import xml.etree.ElementTree as ET
+import zlib
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_brand as B  # noqa: E402
@@ -59,12 +61,24 @@ def expected_files():
 
 
 def png_info(p):
+    """(width, height, colour type, alpha of the top-left pixel or None)."""
     with open(p, "rb") as f:
-        head = f.read(26)
-    if head[:8] != b"\x89PNG\r\n\x1a\n":
+        data = f.read()
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
         return None
-    w, h, depth, ctype = struct.unpack(">IIBB", head[16:26])
-    return w, h, ctype
+    w, h, depth, ctype = struct.unpack(">IIBB", data[16:26])
+    idat, i = b"", 8
+    while i < len(data):
+        n, = struct.unpack(">I", data[i:i + 4])
+        if data[i + 4:i + 8] == b"IDAT":
+            idat += data[i + 8:i + 8 + n]
+        i += 12 + n
+    alpha = None
+    if ctype == 6 and depth == 8:
+        # Row 0, pixel 0: every PNG filter type leaves these bytes unchanged (there is no
+        # left neighbour and no previous row), so they are the raw RGBA values.
+        alpha = zlib.decompress(idat)[1 + 3]
+    return w, h, ctype, alpha
 
 
 def allowed_colours(rel):
@@ -115,11 +129,11 @@ def main():
             if info is None:
                 fail(f"{rel}: not a PNG")
                 continue
-            w, h, ctype = info
+            w, h, ctype, corner = info
             if size and (w, h) != size:
                 fail(f"{rel}: {w}x{h}, expected {size[0]}x{size[1]}")
-            if alpha and ctype not in (4, 6):
-                fail(f"{rel}: no alpha channel (colour type {ctype})")
+            if alpha and (ctype != 6 or corner != 0):
+                fail(f"{rel}: not transparent (colour type {ctype}, top-left alpha {corner})")
     report("files, SVG hygiene and PNG sizes", len(files))
 
     ratios = [("on-light text: Night on Ivory", B.NIGHT, B.IVORY, 4.5),

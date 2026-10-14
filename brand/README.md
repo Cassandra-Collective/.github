@@ -130,9 +130,9 @@ Both are open-licence fonts. That matters for a public repository: the logo file
 |---|---|---|
 | `svg/` | Every mark and lockup, every colour variant, text as outlines | Web, apps, slides, anywhere that takes SVG. Infinite scaling. |
 | `png/` | The same with transparent backgrounds: marks at 64 to 1024 px, small marks at 16, 24 and 32 px, lockups at 1x, 2x and 4x | Documents and tools that don't take SVG. Use @2x on high-density screens. |
-| `pdf/` | Marks and lockups, RGB, one page each | Print shops, LaTeX (`\includegraphics`), office documents |
+| `pdf/` | Marks and lockups in device RGB (the palette's sRGB values), one page each | Print shops, LaTeX (`\includegraphics`), office documents |
 | `eps/` | Marks and lockups, written as CMYK PostScript, bounding box tight to the art | Older print and sign-making workflows |
-| `web/` | `favicon.svg` and `favicon-16/32/48.png`; `app-icon-180/192/512.png`; `avatar-500/1024.png`; three `social-card-*.png` at 1280×640 | Website heads, the GitHub organisation avatar, link previews |
+| `web/` | `favicon.svg` and `favicon-16/32/48.png` (the small mark at every size, so the tab icon keeps one shape); `app-icon-180/192/512.png`; `avatar-500/1024.png`; three `social-card-*.png` at 1280×640 | Website heads, the GitHub organisation avatar, link previews |
 | `source/` | The `.vectorcraft` document behind each asset, gzip-compressed | Editing in VectorCraft |
 | `guide/` | The images in this guide | This page |
 
@@ -170,7 +170,7 @@ Three candidates, rendered as 1280×640 social cards in `web/`. The owner picks 
 |---|---|
 | `social-card-a` | Foresight, checked in the open. |
 | `social-card-b` | Language models for everyday hardware. |
-| `social-card-c` | The people's AI, trained in the open. |
+| `social-card-c` | The people’s AI, trained in the open. |
 
 <img src="web/social-card-a.png" alt="Social card A" width="400"> <img src="web/social-card-b.png" alt="Social card B" width="400"> <img src="web/social-card-c.png" alt="Social card C" width="400">
 

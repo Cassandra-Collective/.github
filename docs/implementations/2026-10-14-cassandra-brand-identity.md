@@ -125,24 +125,30 @@ All runs on the owner's laptop (Windows 11 Home 10.0.26300), VectorCraft 0.10.0 
    - `ALL CHECKS PASSED`, exit 0
 
    The 170 are every file the build writes. The contrast lines are the ratios quoted in the guide: 14.89, 4.52, 7.59 and 21.00.
-3. **The check can fail.** Three deliberately broken copies of `cassandra-mark-on-light.svg` were each caught: one with a `<text>` element, one with a colour outside the variant (`#FF0000`), one with no `<title>`.
-4. **Reproducibility.** Two complete builds from empty output folders were compared by SHA-256:
+3. **The check can fail.**
+   - Three deliberately broken copies of `cassandra-mark-on-light.svg` were each caught: one with a `<text>` element, one with a colour outside the variant (`#FF0000`), one with no `<title>`.
+   - The transparency test reads the alpha of each PNG's top-left pixel from the decompressed image data. All 71 PNGs in the transparent sets are 8-bit RGBA with alpha 0 there. The opaque avatar reads as colour type 2 (RGB, no alpha), which the check would reject if it were listed as transparent.
+4. **Colour spaces, read from the files** (not taken from the exporter's documentation):
+   - The PDFs' decompressed content streams paint with the `rg` operator (device RGB) at the palette's sRGB values: Night is 0.0706 0.1098 0.1804, which is 18/255, 28/255, 46/255.
+   - The EPS files paint with the `k` operator (CMYK) at exactly the values in the guide, for example Night 0.8491 0.701 0.4192 0.6388.
+5. **Reproducibility.** Two complete builds from empty output folders were compared by SHA-256:
    - All 29 SVGs are byte-identical.
    - The 83 PNGs differ only in a `Creation Time` text chunk: decompressed pixel data and every other chunk are identical in all 83.
    - PDF, EPS and `.vectorcraft` files carry creation dates and were not compared further.
-5. **Visual review.** Each step's output was looked at:
+6. **Visual review.** Each step's output was looked at:
    - the concept sheet;
    - the palette sheet (three directions);
    - the small-size test (16, 24, 32 and 48 px for full, two-dash and one-dash variants);
    - the brand board, the construction, palette and clear-space figures;
-   - the compact lockup and social card A.
+   - the compact lockup and social card A;
+   - the organisation avatar (500 px), the app icon (180 px) and the favicons at 16 and 48 px.
 
    The construction figure's first version had colliding labels and the palette figure printed meaningless 1.00:1 ratios. Both were fixed and re-checked.
-6. **Prose.** A scan of every `.md` and `.py` file found no em or en dashes.
+7. **Prose.** A scan of every `.md` and `.py` file found no em or en dashes.
 
 **Not tested:**
 
-- How the files render on GitHub. The repository is private and nothing has been pushed. That includes whether `profile/README.md` resolves its relative image paths on the organisation page.
+- How the files render on GitHub, including whether `profile/README.md` resolves its relative image paths on the organisation page. The repository is private, so the organisation page does not show the profile yet.
 - Print. No physical proof of the CMYK conversion, and Night is slightly outside the SWOP-like gamut (ΔE 3.4).
 - Opening the PDF and EPS files in third-party software, and opening the `.vectorcraft` sources in the VectorCraft desktop app (only the headless engine wrote them).
 - Favicon behaviour in real browsers.

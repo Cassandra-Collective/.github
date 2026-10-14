@@ -235,8 +235,8 @@ def build_lockups(vc):
 
 def build_web(vc):
     v = VARIANTS["on-dark"]
-    # Favicon: night tile, small mark, for 16 to 32 px.
-    new_doc(vc, "favicon", 64, 64, "CASSANDRA favicon", "Small mark on a night tile, for 16 to 32 px.")
+    # Favicon: night tile, small mark at every size, so the tab icon keeps one shape.
+    new_doc(vc, "favicon", 64, 64, "CASSANDRA favicon", "Small mark on a night tile, for 16 to 48 px.")
     rect(vc, 0, 0, 64, 64, NIGHT, radius=12)
     draw_mark(vc, 32, 32, 52, v, SMALL)
     export(vc, "favicon", pdf_eps=False, web=True, png=[("-16", 0.25), ("-32", 0.5), ("-48", 0.75)])
