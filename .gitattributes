@@ -1,0 +1,8 @@
+# Store and check out text files with LF line endings on every machine.
+* text=auto eol=lf
+
+# Binary assets: never touch their bytes.
+*.png binary
+*.pdf binary
+*.eps binary
+*.vectorcraft binary
