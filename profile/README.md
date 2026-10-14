@@ -5,8 +5,7 @@
   </picture>
 </p>
 
-<!-- Tagline: the owner is choosing between the three candidates in brand/README.md; this line follows that choice. -->
-<p align="center"><em>Foresight, checked in the open.</em></p>
+<p align="center"><em>Language models for everyday hardware.</em></p>
 
 Kassandra of Troy saw the future and was never believed. We build language models, machines that predict, and we publish everything needed to check them: code, run logs, weights, and the results that did not work.
 

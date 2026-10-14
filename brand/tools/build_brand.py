@@ -50,11 +50,8 @@ STACKED = dict(gap=0.24, word_h=0.20, desc_h=0.068, line_gap=0.085)
 COMPACT = dict(gap=0.30, word_h=0.34)  # horizontal without the descriptor, for small sizes
 CLEAR_SPACE = 0.25  # of H, on every side
 
-TAGLINES = {
-    "a": "Foresight, checked in the open.",
-    "b": "Language models for everyday hardware.",
-    "c": "The people’s AI, trained in the open.",
-}
+# Owner decision 2026-10-14 (candidate B of three).
+TAGLINE = "Language models for everyday hardware."
 
 
 # ---------------------------------------------------------------- geometry
@@ -251,17 +248,15 @@ def build_web(vc):
     rect(vc, 0, 0, 1024, 1024, NIGHT)
     draw_mark(vc, 512, 512, 600, v)
     export(vc, "avatar", pdf_eps=False, web=True, png=[("-500", 500 / 1024), ("-1024", 1)])
-    # Social cards, one per tagline candidate (GitHub's recommended 1280 x 640).
-    for key, line in TAGLINES.items():
-        new_doc(vc, f"social-{key}", 1280, 640, "Cassandra Collective social card", line)
-        rect(vc, 0, 0, 1280, 640, NIGHT)
-        H = 150
-        ids, w, h = horizontal(vc, 0, 0, H, v)
-        g = group(vc, ids)
-        set_box(vc, g, (1280 - w) / 2, 205, w, h)
-        t, b = free_text(vc, line, 40, IVORY)
-        set_box(vc, t, (1280 - b["width"]) / 2, 425, b["width"], b["height"])
-        export(vc, f"social-card-{key}", pdf_eps=False, web=True, png=[("", 1)])
+    # Social card with the tagline (GitHub's recommended 1280 x 640).
+    new_doc(vc, "social-card", 1280, 640, "Cassandra Collective social card", TAGLINE)
+    rect(vc, 0, 0, 1280, 640, NIGHT)
+    ids, w, h = horizontal(vc, 0, 0, 150, v)
+    g = group(vc, ids)
+    set_box(vc, g, (1280 - w) / 2, 205, w, h)
+    t, b = free_text(vc, TAGLINE, 40, IVORY)
+    set_box(vc, t, (1280 - b["width"]) / 2, 425, b["width"], b["height"])
+    export(vc, "social-card", pdf_eps=False, web=True, png=[("", 1)])
 
 
 def build_guide(vc):

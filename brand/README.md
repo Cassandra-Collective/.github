@@ -19,7 +19,7 @@ The CASSANDRA program builds language models, and a language model is a machine 
 
 - **The C is the known past.** It is a solid, heavy stroke: what has been observed. It is also the C of CASSANDRA and, in Greek, the lunate sigma Ϲ, the letter doubled at the heart of her name, ΚΑϹϹΑΝΔΡΑ.
 - **The dashes are the forecast.** They close the circle the way every forecast chart marks a prediction: dashed, not solid. The mark shows its prediction honestly *as* a prediction.
-- **That answers the curse.** Kassandra was disbelieved because no one could check her. This collective publishes its code, logs and weights so that anyone can. The tagline candidates below say the same thing in words.
+- **That answers the curse.** Kassandra was disbelieved because no one could check her. This collective publishes its code, logs and weights so that anyone can.
 
 **Why not an eye?** An eye is the obvious symbol for a seer, and Apache Cassandra's logo already is one. A mark that recalls a well-known product of the same name fails before it starts.
 
@@ -132,7 +132,7 @@ Both are open-licence fonts. That matters for a public repository: the logo file
 | `png/` | The same with transparent backgrounds: marks at 64 to 1024 px, small marks at 16, 24 and 32 px, lockups at 1x, 2x and 4x | Documents and tools that don't take SVG. Use @2x on high-density screens. |
 | `pdf/` | Marks and lockups in device RGB (the palette's sRGB values), one page each | Print shops, LaTeX (`\includegraphics`), office documents |
 | `eps/` | Marks and lockups, written as CMYK PostScript, bounding box tight to the art | Older print and sign-making workflows |
-| `web/` | `favicon.svg` and `favicon-16/32/48.png` (the small mark at every size, so the tab icon keeps one shape); `app-icon-180/192/512.png`; `avatar-500/1024.png`; three `social-card-*.png` at 1280×640 | Website heads, the GitHub organisation avatar, link previews |
+| `web/` | `favicon.svg` and `favicon-16/32/48.png` (the small mark at every size, so the tab icon keeps one shape); `app-icon-180/192/512.png`; `avatar-500/1024.png`; `social-card.png` at 1280×640, with the tagline | Website heads, the GitHub organisation avatar, repository social previews |
 | `source/` | The `.vectorcraft` document behind each asset, gzip-compressed | Editing in VectorCraft |
 | `guide/` | The images in this guide | This page |
 
@@ -162,17 +162,18 @@ Both are open-licence fonts. That matters for a public repository: the logo file
 - Don't place the colour versions on busy photographs; use solid black or white there.
 - Don't crowd it: respect the clear space.
 
-## Taglines (to be chosen)
+## Tagline
 
-Three candidates, rendered as 1280×640 social cards in `web/`. The owner picks one; the others are then removed.
+> Language models for everyday hardware.
 
-| Card | Tagline |
-|---|---|
-| `social-card-a` | Foresight, checked in the open. |
-| `social-card-b` | Language models for everyday hardware. |
-| `social-card-c` | The people’s AI, trained in the open. |
+The tagline says plainly what the program does; the mark carries the myth. Story in the picture, scope in the words. Chosen by the owner on 2026-10-14 from three candidates.
 
-<img src="web/social-card-a.png" alt="Social card A" width="400"> <img src="web/social-card-b.png" alt="Social card B" width="400"> <img src="web/social-card-c.png" alt="Social card C" width="400">
+- Set it in Inter Regular, sentence case, with its full stop.
+- Use Ivory on Night or Night on Ivory.
+- It is not part of any lockup. Keep it at least the clear space X away from the logo.
+- `web/social-card.png` (1280×640) carries the horizontal lockup and the tagline. Use it as the social preview image of the organisation's repositories (each repository's Settings, Social preview).
+
+<img src="web/social-card.png" alt="Social card" width="560">
 
 ## Projects
 

@@ -4,7 +4,8 @@ Usage (from the repository root, after build_brand.py):
     python brand/tools/check_brand.py
 
 Checks, each over ALL files of its kind (not a sample):
-  1. Every expected file exists (the list is derived from build_brand's tables).
+  1. Every expected file exists (the list is derived from build_brand's tables), and the
+     output folders hold nothing else (no stale files from an earlier build).
   2. Every SVG parses, has a <title> and a viewBox, contains no <text> (all type outlined),
      no <image> and no external references, and uses only its variant's colours.
   3. Every PNG has the expected pixel size; the transparent sets are 8-bit RGBA with a fully
@@ -50,10 +51,8 @@ def expected_files():
     out += [("web/app-icon.svg", None, False)] + [(f"web/app-icon-{px}.png", (px, px), False) for px in (180, 192, 512)]
     out += [("web/avatar.svg", None, False), ("web/avatar-500.png", (500, 500), False),
             ("web/avatar-1024.png", (1024, 1024), False)]
-    for k in B.TAGLINES:
-        out += [(f"web/social-card-{k}.svg", None, False), (f"web/social-card-{k}.png", (1280, 640), False)]
-    out += [(f"source/{n}.vectorcraft", None, False)
-            for n in ["favicon", "app-icon", "avatar"] + [f"social-card-{k}" for k in B.TAGLINES]]
+    out += [("web/social-card.svg", None, False), ("web/social-card.png", (1280, 640), False)]
+    out += [(f"source/{n}.vectorcraft", None, False) for n in ("favicon", "app-icon", "avatar", "social-card")]
     out += [(f"guide/{n}", None, False) for n in ("palette.svg", "palette.png", "construction.svg",
                                                    "construction.png", "clear-space.svg", "clear-space.png",
                                                    "brand-board.png")]
@@ -117,6 +116,12 @@ def check_svg(p, rel):
 def main():
     base = B.BRAND
     files = expected_files()
+    expected = {rel for rel, _, _ in files}
+    for folder in B.DIRS.values():
+        for name in sorted(os.listdir(folder)) if os.path.isdir(folder) else []:
+            rel = os.path.relpath(os.path.join(folder, name), base).replace(os.sep, "/")
+            if rel not in expected:
+                fail(f"unexpected file (stale or unlisted): {rel}")
     for rel, size, alpha in files:
         p = os.path.join(base, rel)
         if not os.path.isfile(p) or os.path.getsize(p) == 0:

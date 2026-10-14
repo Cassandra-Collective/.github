@@ -4,7 +4,7 @@
 |---|---|
 | Repository | `Cassandra-Collective/.github` (organisation profile and brand home) |
 | Branch | `brand/cassandra-identity` |
-| Status | Verified on 2026-10-14 (VectorCraft 0.10.0, Python 3.12.10, Windows 11). Tagline choice pending with the owner. |
+| Status | Verified on 2026-10-14 (VectorCraft 0.10.0, Python 3.12.10, Windows 11). Tagline B chosen by the owner the same day. |
 
 Project prose style: no em or en dashes.
 
@@ -34,10 +34,10 @@ Without a mark, the organisation page, repositories, slides and papers show noth
 | `brand/svg/` (20 files) | Mark, small mark, horizontal, compact and stacked lockups, each in `on-light`, `on-dark`, `black` and `white`. Text as outlines. |
 | `brand/png/` (68 files) | The same with transparent backgrounds: marks at 64 to 1024 px, small marks at 16 to 32 px, lockups at 1x, 2x and 4x. |
 | `brand/pdf/`, `brand/eps/` (16 files each) | Marks and the three lockups in every variant, for print. |
-| `brand/web/` (17 files) | Favicon (SVG and 16, 32, 48 px), app icon (180, 192, 512 px), organisation avatar (500, 1024 px), three social cards (1280×640). |
-| `brand/source/` (26 files) | Gzip-compressed `.vectorcraft` document behind each deliverable. |
+| `brand/web/` (13 files) | Favicon (SVG and 16, 32, 48 px), app icon (180, 192, 512 px), organisation avatar (500, 1024 px), social card with the tagline (1280×640). |
+| `brand/source/` (24 files) | Gzip-compressed `.vectorcraft` document behind each deliverable. |
 | `brand/guide/` (7 files) | Palette, construction and clear-space figures and the brand board, used by the guide. |
-| `brand/README.md` | Brand guide: idea, construction, lockups, clear space, minimum sizes, colour, typography, files, misuse, taglines. |
+| `brand/README.md` | Brand guide: idea, construction, lockups, clear space, minimum sizes, colour, typography, files, misuse, tagline. |
 | `profile/README.md` | Organisation profile page: stacked lockup, tagline, the four projects, how we work. |
 | `README.md` | What this repository is, and the visibility caveat for the profile. |
 | `.gitattributes`, `.gitignore` | LF line endings, binary assets left untouched, Python caches ignored. |
@@ -77,7 +77,7 @@ Without a mark, the organisation page, repositories, slides and papers show noth
   - colour on dark: ivory C, gold dashes, ivory text;
   - solid black, solid white.
 - Formats: SVG (outlined, artboard as viewBox), PDF (`preserveEditing` off), EPS, and PNG with a transparent background at the sizes listed in the guide.
-- Also a favicon set, a 1024 px organisation avatar, and three 1280×640 social cards, one per tagline candidate.
+- Also a favicon set, a 1024 px organisation avatar, and a 1280×640 social card with the tagline. While the tagline was open, one card per candidate was built; after the choice only the chosen card is built.
 
 ## Mathematical / Statistical Details
 
@@ -107,7 +107,7 @@ Without a mark, the organisation page, repositories, slides and papers show noth
 | Two accent tones (bronze on light, gold on dark). | One accent for both grounds. | A single gold that passes both contrast targets is a dull brown; see the maths above. | Engineering, stated to owner |
 | Typefaces: Source Serif 4 (wordmark) and Inter (descriptor, taglines, guide). | Perpetua Titling, Castellar and other installed system fonts. | Both are under the SIL Open Font License 1.1, which allows outlining in a logo and redistribution with the files. Microsoft- and Monotype-licensed system fonts are a grey area for a public repository. The serif carries the classical inscription tone; the sans carries the technical one. | Engineering, stated to owner |
 | Organisation name `Cassandra-Collective`, descriptor COLLECTIVE. | The-Cassandra-Lab, Cassandra-Foresight, Kassandra-Lab (all free on GitHub on 2026-10-14). `CASSANDRA-Lab` was taken by a user account `cassandra-lab` (created 2025-04-02; GitHub logins are case-insensitive). | Owner's choice. "Collective" says many people, one model: the volunteer pool. | Owner, 2026-10-14 |
-| Tagline: three candidates rendered as social cards. | | The owner asked to see all three before choosing. | Owner, pending |
+| Tagline "Language models for everyday hardware." | "Foresight, checked in the open." and "The people’s AI, trained in the open.", each rendered as a social card. | Owner's choice. It states the program's scope plainly, while the mark carries the myth. | Owner, 2026-10-14 |
 | A separate small mark for 24 px and below. | Scaling the full mark down. | The 16 px render of the full mark turns the dashes into grey noise. This follows the earlier project-marks rule: redraw small sizes, don't resize. | Engineering |
 | A compact horizontal lockup (no descriptor). | Only the three lockups the brief names. | The descriptor sets the horizontal lockup's minimum at 270 px and 68 mm. Without a compact version, anything smaller would have to fall back to the bare mark and lose the name. | Engineering, stated to owner |
 | Every asset in its own VectorCraft document. | One master document with an artboard per asset. | The EPS exporter embeds the whole native document, so a shared document would put every asset inside every EPS. | Engineering |
@@ -117,30 +117,32 @@ Without a mark, the organisation page, repositories, slides and papers show noth
 
 All runs on the owner's laptop (Windows 11 Home 10.0.26300), VectorCraft 0.10.0 (`vectorcraft-cli`, headless MCP server), Python 3.12.10, standard library only.
 
-1. **Build.** `python brand/tools/build_brand.py` from the repository root prints `done` and writes 170 files in about 10 to 20 seconds.
+1. **Build.** `python brand/tools/build_brand.py` from the repository root prints `done` and writes 164 files in about 10 to 20 seconds.
 2. **Check.** `python brand/tools/check_brand.py` printed:
-   - `ok files, SVG hygiene and PNG sizes (170 checked)`
+   - `ok files, SVG hygiene and PNG sizes (164 checked)`
    - `ok WCAG contrast (8 checked)`
    - `ok mark geometry (2 checked)`
    - `ALL CHECKS PASSED`, exit 0
 
-   The 170 are every file the build writes. The contrast lines are the ratios quoted in the guide: 14.89, 4.52, 7.59 and 21.00.
+   The 164 are every file the build writes, and the output folders hold no other file. The contrast lines are the ratios quoted in the guide: 14.89, 4.52, 7.59 and 21.00.
 3. **The check can fail.**
    - Three deliberately broken copies of `cassandra-mark-on-light.svg` were each caught: one with a `<text>` element, one with a colour outside the variant (`#FF0000`), one with no `<title>`.
    - The transparency test reads the alpha of each PNG's top-left pixel from the decompressed image data. All 71 PNGs in the transparent sets are 8-bit RGBA with alpha 0 there. The opaque avatar reads as colour type 2 (RGB, no alpha), which the check would reject if it were listed as transparent.
+   - The stale-file test was run against the outputs left over from the three-card build: it reported the nine superseded `social-card-a/b/c` files as unexpected and the three new `social-card` files as missing.
 4. **Colour spaces, read from the files** (not taken from the exporter's documentation):
    - The PDFs' decompressed content streams paint with the `rg` operator (device RGB) at the palette's sRGB values: Night is 0.0706 0.1098 0.1804, which is 18/255, 28/255, 46/255.
    - The EPS files paint with the `k` operator (CMYK) at exactly the values in the guide, for example Night 0.8491 0.701 0.4192 0.6388.
 5. **Reproducibility.** Two complete builds from empty output folders were compared by SHA-256:
-   - All 29 SVGs are byte-identical.
-   - The 83 PNGs differ only in a `Creation Time` text chunk: decompressed pixel data and every other chunk are identical in all 83.
+   - All 27 SVGs are byte-identical.
+   - The 81 PNGs differ only in a `Creation Time` text chunk: decompressed pixel data and every other chunk are identical in all 81.
+   - Measured again after the tagline change; the earlier three-card build gave the same result (29 of 29 and 83 of 83).
    - PDF, EPS and `.vectorcraft` files carry creation dates and were not compared further.
 6. **Visual review.** Each step's output was looked at:
    - the concept sheet;
    - the palette sheet (three directions);
    - the small-size test (16, 24, 32 and 48 px for full, two-dash and one-dash variants);
    - the brand board, the construction, palette and clear-space figures;
-   - the compact lockup and social card A;
+   - the compact lockup and the social card with tagline B;
    - the organisation avatar (500 px), the app icon (180 px) and the favicons at 16 and 48 px.
 
    The construction figure's first version had colliding labels and the palette figure printed meaningless 1.00:1 ratios. Both were fixed and re-checked.
