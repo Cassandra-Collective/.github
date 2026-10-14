@@ -29,6 +29,7 @@ In this repository:
 | `brand/tools/build_brand.py` | The Red-figure colours; `CARD_PALETTES`, `PROJECT_CARDS`, `KICKER`, `CARD` and `build_project_cards()`: one 1280×640 card per project repository, each in its project's palette. The build fails if any text line is wider than the 650 px text column, or if a kicker colour below 4.5:1 is set under 24 px. |
 | `brand/tools/check_brand.py` | Expects the 9 new files (SVG, PNG and source of each card). Each card may use only its own palette's colours. Three Red-figure contrast checks are added. |
 | `brand/web/social-card-{cassandra,chorus,dervish}.{svg,png}`, `brand/source/social-card-*.vectorcraft` | The three cards, 30 to 37 KB each. |
+| `brand/{svg,pdf,eps,png,source}/cassandra-mark{,-small}-red-figure-on-{light,dark}*` | The mark, full and small, in the Red-figure palette (28 files), for the CASSANDRA and CASSANDRA-Chorus README headers. |
 | `brand/README.md` | A "Social cards" section: which card and palette goes on which repository, the layout, why the kicker is large text, and the upload path. "Projects" records Red-figure as the palette of CASSANDRA and CASSANDRA-Chorus. The files table lists the new cards. |
 | `docs/implementations/2026-10-14-project-cards-and-org-move.md` | This document. |
 
@@ -77,7 +78,7 @@ The card lines are the short forms of the descriptions. The owner saw them as an
 - test fixtures;
 - dated records of where something ran.
 
-**README header.** Each project README has a one-line header: the small mark (20 px, loaded from this repository's `brand/svg`) and "Part of the Cassandra Collective". The markup was checked on GitHub, in light and dark mode, before it was copied to the second and third repositories.
+**README header.** Each project README has a one-line header: the small mark (20 px, loaded from this repository's `brand/svg`) and "Part of the Cassandra Collective". CASSANDRA and CASSANDRA-Chorus load `cassandra-mark-small-red-figure-on-{light,dark}.svg` (owner, 2026-10-14). Dervish loads the organisation's `cassandra-mark-small-on-{light,dark}.svg`. Those headers show a broken image until this pull request is merged, so it should be merged first. The markup was checked on GitHub, in light and dark mode, before it was copied to the second and third repositories.
 
 ## Mathematical / Statistical Details
 
@@ -102,7 +103,7 @@ The block's top is placed at 320 − h / 2.
 | Decision | Alternatives | Why | Who |
 |---|---|---|---|
 | A card per repository | The organisation card everywhere | Owner's choice | Owner, 2026-10-14 |
-| Red-figure cards for CASSANDRA and CASSANDRA-Chorus; Bronze and night for Dervish | Bronze and night everywhere | The owner reserved Red-figure for those two projects when choosing the palettes, and confirmed it for these cards | Owner, 2026-10-14 |
+| Red-figure cards and README-header marks for CASSANDRA and CASSANDRA-Chorus; Bronze and night for Dervish | Bronze and night everywhere | The owner reserved Red-figure for those two projects when choosing the palettes, and confirmed it for these cards | Owner, 2026-10-14 |
 | Kicker at about 25 px on every card | Clay kicker on the Red-figure cards; different kicker sizes per palette | Keeps terracotta as the accent and one layout for all cards, while meeting WCAG large-text contrast | Engineering |
 | The owner uploads the cards and pins the repositories | Driving the owner's signed-in Chrome | Owner's choice. These are account settings with no API. | Owner, 2026-10-14 |
 | Ephesus's cards keep the old URL for now | Shrinking the text, or showing ephesushq.com | A layout change belongs to Ephesus's own design system, not to a link fix | Engineering, stated in Ephesus#79 |
@@ -112,8 +113,11 @@ The block's top is placed at 320 − h / 2.
 ## Verification
 
 1. **Build and check.** `python brand/tools/build_brand.py`, then `python brand/tools/check_brand.py`, printed:
-   - `ok files, SVG hygiene and PNG sizes (173 checked)`
-   - `ok WCAG contrast (11 checked)`, including Clay on Kiln at 15.40:1, and Terracotta on Kiln at 3.30:1 against a 3:1 target for both the dashes and the large-text kicker
+   - `ok files, SVG hygiene and PNG sizes (201 checked)`
+   - `ok WCAG contrast (15 checked)`, including:
+     - Clay on Kiln at 15.40:1;
+     - Terracotta on Kiln at 3.30:1, against a 3:1 target for both the dashes and the large-text kicker;
+     - the Red-figure mark on GitHub's grounds: Kiln 18.23:1 and Terracotta 5.52:1 on white, Clay 15.99:1 and Terracotta 3.43:1 on `#0D1117`
    - `ok mark geometry (2 checked)`
    - `ALL CHECKS PASSED`
 

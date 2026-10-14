@@ -212,7 +212,13 @@ This is the organisation's identity. Projects may get their own marks later, bui
   - terracotta `#B2462A`, the accent: 3.30:1 on kiln, 4.66:1 on clay;
   - clay ivory `#F3EBDD`, the ring and text: 15.40:1 on kiln.
 
-  Their social cards already use it, and their own marks will too.
+  Their social cards use it, and so does the mark in their README headers:
+  - `cassandra-mark-red-figure-on-light` / `-on-dark`: the full mark;
+  - `cassandra-mark-small-red-figure-on-light` / `-on-dark`: the small mark.
+
+  The light versions are a kiln ring with terracotta dashes: 18.23:1 and 5.52:1 on GitHub's white. The dark versions are a clay ring with terracotta dashes: 15.99:1 and 3.43:1 on GitHub's dark `#0D1117`.
+
+  Only the mark comes in Red-figure. The lockups say COLLECTIVE, so they keep the organisation's palette.
 - **Dervish** uses the organisation palette for now.
 - **Ephesus** keeps its own identity and design system.
 

@@ -27,6 +27,13 @@ NIGHT, BRONZE, GOLD, IVORY = "#121C2E", "#8A672B", "#D2A65A", "#F4EFE6"
 BLACK, WHITE = "#000000", "#FFFFFF"
 # Palette "Red-figure", for the CASSANDRA and CASSANDRA-Chorus project materials (owner, 2026-10-14).
 KILN, TERRACOTTA, CLAY = "#1A1411", "#B2462A", "#F3EBDD"
+# The mark (full and small) in the Red-figure palette, for the CASSANDRA and CASSANDRA-Chorus
+# README headers and other project material. Only the mark: the lockups say COLLECTIVE and
+# stay in the organisation's palette.
+PROJECT_MARK_VARIANTS = {
+    "red-figure-on-light": dict(c=KILN, dash=TERRACOTTA),
+    "red-figure-on-dark": dict(c=CLAY, dash=TERRACOTTA),
+}
 
 # Colour variants: C = the ring, dash = the forecast, text = wordmark, desc = descriptor.
 VARIANTS = {
@@ -223,8 +230,8 @@ def export(vc, stem, vector=True, pdf_eps=True, png=(), web=False, source=True):
     return out
 
 
-def build_marks(vc):
-    for vname, v in VARIANTS.items():
+def build_marks(vc, variants=None):
+    for vname, v in (variants or VARIANTS).items():
         new_doc(vc, f"mark-{vname}", 512, 512, "CASSANDRA mark", f"The Forecast mark, {vname} colours.")
         draw_mark(vc, 256, 256, 512, v)
         export(vc, f"cassandra-mark-{vname}", png=[(f"-{px}", px / 512) for px in (64, 128, 256, 512, 1024)])
@@ -424,6 +431,7 @@ def main():
         os.makedirs(d, exist_ok=True)
     with VC(BRAND) as vc:
         build_marks(vc)
+        build_marks(vc, PROJECT_MARK_VARIANTS)
         build_lockups(vc)
         build_web(vc)
         build_project_cards(vc)
