@@ -25,5 +25,5 @@ Closes #
 - [ ] The change is focused: one change per pull request
 - [ ] Evidence is attached above, including what was not tested
 - [ ] Documents affected by the change are updated in this pull request
-- [ ] No secrets, tokens, keys or personal data in the diff or the commit messages
+- [ ] No secrets, tokens or keys in the diff or the commit messages, and no personal data beyond what the change needs
 - [ ] I followed this repository's `CONTRIBUTING.md`, or the [organisation's guide](https://github.com/Cassandra-Collective/.github/blob/main/CONTRIBUTING.md) if it has none
