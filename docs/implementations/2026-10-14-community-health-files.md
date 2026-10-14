@@ -4,7 +4,7 @@
 |---|---|
 | Repository | `Cassandra-Collective/.github` |
 | Branch | `docs/community-health` |
-| Status | Planned |
+| Status | Verified on 2026-10-14 by static checks (Python 3.13.14 with PyYAML 6.0.3, git 2.53, gh 2.92, Windows 11); how GitHub renders the defaults can only be seen after merge |
 
 Prose style: no em or en dashes.
 
@@ -96,7 +96,38 @@ None. This is a documentation and configuration change.
 
 ## Verification
 
-To be completed after the files are written.
+1. **State before the change,** read through the GitHub API on 2026-10-14:
+   - which of the six file types each repository has (the table under Problem / Motivation);
+   - private vulnerability reporting: `gh api repos/Cassandra-Collective/<repo>/private-vulnerability-reporting` returned `"enabled": true` for all five repositories;
+   - labels: `bug`, `enhancement` and `question` exist in `.github`, CASSANDRA, CASSANDRA-Chorus, Dervish and Ephesus (`gh label list`);
+   - Discussions are disabled on all five repositories, so `SUPPORT.md` does not mention them.
+2. **Code of conduct is an exact copy.** `git rev-parse HEAD:CODE_OF_CONDUCT.md` gives `4860e75b35034fa7b88d3b78e3de8068c7289514`, the same blob SHA that `gh api repos/Cassandra-Collective/Ephesus/contents/CODE_OF_CONDUCT.md --jq .sha` reports for Ephesus's `main`. The file is plain ASCII, contains no em or en dash, and does not contain the word "Ephesus" (`grep -i`), so no adaptation was needed.
+3. **Issue forms are valid.** A validator (kept outside the repository) loads each file with `yaml.safe_load` and checks it against GitHub's documented schema:
+   - each form has non-empty `name` and `description` strings and a non-empty `body` list, and the names are unique across forms;
+   - every element's `type` is one of `markdown`, `textarea`, `input`, `dropdown`, `checkboxes`, `upload`, and it uses only that type's documented attributes and validations;
+   - every non-markdown element has a `label` and an `id` that matches `[A-Za-z0-9_-]+` and is unique in its form; markdown elements have a `value` and no `id`;
+   - dropdown options are non-empty and distinct; every checkbox option has a `label`; every `required` is a boolean;
+   - labels are a subset of {`bug`, `enhancement`, `question`}, and no form sets `type`, `projects` or `assignees`;
+   - `config.yml` has a boolean `blank_issues_enabled` and every contact link has `name`, `url` (https) and `about`.
+
+   Result: `OK: 4 files, every check passed` (bug report 7 fields, feature or improvement 6, question 3).
+
+   The validator was checked against faults. On two of Ephesus's forms it reports their `needs-triage` label. On mutated copies of these files it caught all 7 injected faults: a missing `description`, an invalid element type, an `id` containing a space, a duplicate form name, a misspelt `label` key, a string `blank_issues_enabled` and a contact link without `about`.
+4. **No em or en dashes.** A byte-level search (`LC_ALL=C grep` for U+2014 and U+2013) finds 0 in each of the 11 files in this change; the same search finds 9 in Ephesus's `SECURITY.md`, showing that it detects them. The only non-ASCII character in the change is the middle dot in this document's title.
+5. **Line endings.** `git ls-files --eol` shows `i/lf w/lf` for all 11 files, and none starts with a byte order mark.
+6. **Links.** All 43 distinct absolute URLs were fetched signed out with `curl`:
+   - 24 answer 200 (two of them only on a retry; the first attempt returned 503), including both organisation-wide label searches (31 open `good first issue` results at the time).
+   - 4 answer 404 today and **resolve only after this pull request merges**: `.github/blob/main/CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md` and `SUPPORT.md`. The forms, `config.yml`, the pull request template, `SUPPORT.md` and `CONTRIBUTING.md` link to them.
+   - 10 redirect to GitHub's sign-in page, as expected: the five `security/advisories/new` forms and the five `issues/new/choose` pages need an account.
+   - 4 redirect permanently, all in the copied Contributor Covenant text: three contributor-covenant.org pages (to the same path with a trailing slash) and `github.com/mozilla/diversity` (now `mozilla/inclusion`). They are left as Ephesus has them, to keep the copy exact.
+   - 1 is not a link: the `<repository>` placeholder in `SECURITY.md`, inside a code span.
+
+   Every relative link in `README.md` and in this document resolves to a file on the branch.
+
+**Not tested:**
+- How GitHub displays the defaults (the template chooser, the forms, the pull request template, the "contributing guidelines" link, and the repository tabs in CASSANDRA, Dervish, Chorus and Ephesus). GitHub reads defaults only from the default branch, so this can be observed only after merge.
+- Submitting a form or a private vulnerability report.
+- That GitHub itself accepts the forms: the validator encodes the documented schema, but GitHub's parser was not run. After merge, GitHub shows an error on the file's page if it rejects a form.
 
 ## Related Docs
 
