@@ -4,7 +4,7 @@
 |---|---|
 | Repository | `Cassandra-Collective/.github` (organisation profile and brand home) |
 | Branch | `brand/cassandra-identity` |
-| Status | Verified on 2026-10-14 (VectorCraft 0.10.0, Python 3.12.10, Windows 11). Tagline B chosen by the owner the same day. |
+| Status | Verified on 2026-10-14 (VectorCraft 0.10.0, Python 3.12.10, Windows 11). Tagline B chosen by the owner the same day. Merged and public the same day; rendering on GitHub verified after the merge. |
 
 Project prose style: no em or en dashes.
 
@@ -147,10 +147,15 @@ All runs on the owner's laptop (Windows 11 Home 10.0.26300), VectorCraft 0.10.0 
 
    The construction figure's first version had colliding labels and the palette figure printed meaningless 1.00:1 ratios. Both were fixed and re-checked.
 7. **Prose.** A scan of every `.md` and `.py` file found no em or en dashes.
+8. **Rendering on GitHub**, after the owner merged PR #1 (merge commit `7492c0b`) and made the repository public on 2026-10-14. Checked in a browser, signed out:
+   - [github.com/Cassandra-Collective](https://github.com/Cassandra-Collective) shows `profile/README.md` with the uploaded avatar.
+   - The `<picture>` element serves `cassandra-stacked-on-dark.svg` in dark mode and `cassandra-stacked-on-light.svg` in light mode (emulated with the browser's `prefers-color-scheme`).
+   - The profile's relative paths resolve into this repository: images to `/Cassandra-Collective/.github/raw/main/brand/...`, and the guide link to `/Cassandra-Collective/.github/blob/main/brand/README.md`.
+   - All four project links point at `github.com/Cassandra-Collective/<project>`.
+   - On `brand/README.md`, all six images load at their native widths: 851, 2400, 760, 1400, 1200 and 1280 px.
 
 **Not tested:**
 
-- How the files render on GitHub, including whether `profile/README.md` resolves its relative image paths on the organisation page. The repository is private, so the organisation page does not show the profile yet.
 - Print. No physical proof of the CMYK conversion, and Night is slightly outside the SWOP-like gamut (ΔE 3.4).
 - Opening the PDF and EPS files in third-party software, and opening the `.vectorcraft` sources in the VectorCraft desktop app (only the headless engine wrote them).
 - Favicon behaviour in real browsers.
