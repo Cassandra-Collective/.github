@@ -132,7 +132,7 @@ Both are open-licence fonts. That matters for a public repository: the logo file
 | `png/` | The same with transparent backgrounds: marks at 64 to 1024 px, small marks at 16, 24 and 32 px, lockups at 1x, 2x and 4x | Documents and tools that don't take SVG. Use @2x on high-density screens. |
 | `pdf/` | Marks and lockups in device RGB (the palette's sRGB values), one page each | Print shops, LaTeX (`\includegraphics`), office documents |
 | `eps/` | Marks and lockups, written as CMYK PostScript, bounding box tight to the art | Older print and sign-making workflows |
-| `web/` | `favicon.svg` and `favicon-16/32/48.png` (the small mark at every size, so the tab icon keeps one shape); `app-icon-180/192/512.png`; `avatar-500/1024.png`; `social-card.png` at 1280×640, with the tagline | Website heads, the GitHub organisation avatar, repository social previews |
+| `web/` | `favicon.svg` and `favicon-16/32/48.png` (the small mark at every size, so the tab icon keeps one shape); `app-icon-180/192/512.png`; `avatar-500/1024.png`; `social-card.png` (the organisation, with the tagline) and `social-card-cassandra/chorus/dervish.png`, all 1280×640 | Website heads, the GitHub organisation avatar, repository social previews |
 | `source/` | The `.vectorcraft` document behind each asset, gzip-compressed | Editing in VectorCraft |
 | `guide/` | The images in this guide | This page |
 
@@ -171,15 +171,49 @@ The tagline says plainly what the program does; the mark carries the myth. Story
 - Set it in Inter Regular, sentence case, with its full stop.
 - Use Ivory on Night or Night on Ivory.
 - It is not part of any lockup. Keep it at least the clear space X away from the logo.
-- `web/social-card.png` (1280×640) carries the horizontal lockup and the tagline. Use it as the social preview image of the organisation's repositories (each repository's Settings, Social preview).
+- `web/social-card.png` (1280×640) carries the horizontal lockup and the tagline.
 
 <img src="web/social-card.png" alt="Social card" width="560">
+
+## Social cards
+
+Each repository shows its own card when a link to it is shared:
+
+| Repository | Card | Palette |
+|---|---|---|
+| `.github` | `web/social-card.png`, the organisation card with the tagline | Bronze and night |
+| CASSANDRA | `web/social-card-cassandra.png` | Red-figure |
+| CASSANDRA-Chorus | `web/social-card-chorus.png` | Red-figure |
+| Dervish | `web/social-card-dervish.png` | Bronze and night |
+| Ephesus | Its own card, from its own design system | Its own |
+
+**Project card layout:**
+- The mark sits on the left. The ring is in the palette's light colour and the dashes in its accent.
+- On the right:
+  - a "CASSANDRA COLLECTIVE" kicker in the accent, Inter Medium, set at about 25 px;
+  - the project name in the wordmark's type (Source Serif 4, capitals, tracking +160);
+  - a short line in Inter Regular.
+- The text block is centred vertically.
+
+**Why the kicker is 25 px.** Terracotta on kiln black is 3.30:1. That passes WCAG for graphics (3:1) but not for normal-size text (4.5:1). Text of 24 px and up counts as large text, where 3:1 is enough, so the kicker is set at about 25 px on every card. The build fails if a kicker colour below 4.5:1 is ever set under 24 px.
+
+The build also stops with an error if any line is wider than the 650 px text column. To change a card, edit `PROJECT_CARDS` in `tools/build_brand.py`.
+
+**Uploading a card:** GitHub has no API for this. In the repository, go to **Settings**, then **General**, then **Social preview**, then **Edit**, then **Upload an image**. The image must be under 1 MB; these are about 30 KB.
+
+<img src="web/social-card-chorus.png" alt="CASSANDRA Chorus social card" width="400"> <img src="web/social-card-dervish.png" alt="Dervish social card" width="400">
 
 ## Projects
 
 This is the organisation's identity. Projects may get their own marks later, built on the same ring:
 
-- The **Red-figure** palette is reserved for a possible CASSANDRA-Chorus or CASSANDRA mark: kiln black `#1A1411`, terracotta `#B2462A`, clay ivory `#F3EBDD`.
+- **CASSANDRA and CASSANDRA-Chorus use the Red-figure palette** (owner, 2026-10-14):
+  - kiln black `#1A1411`, the ground;
+  - terracotta `#B2462A`, the accent: 3.30:1 on kiln, 4.66:1 on clay;
+  - clay ivory `#F3EBDD`, the ring and text: 15.40:1 on kiln.
+
+  Their social cards already use it, and their own marks will too.
+- **Dervish** uses the organisation palette for now.
 - **Ephesus** keeps its own identity and design system.
 
 ## Rebuilding

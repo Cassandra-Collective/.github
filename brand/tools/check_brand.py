@@ -53,6 +53,9 @@ def expected_files():
             ("web/avatar-1024.png", (1024, 1024), False)]
     out += [("web/social-card.svg", None, False), ("web/social-card.png", (1280, 640), False)]
     out += [(f"source/{n}.vectorcraft", None, False) for n in ("favicon", "app-icon", "avatar", "social-card")]
+    for k in B.PROJECT_CARDS:
+        out += [(f"web/social-card-{k}.svg", None, False), (f"web/social-card-{k}.png", (1280, 640), False),
+                (f"source/social-card-{k}.vectorcraft", None, False)]
     out += [(f"guide/{n}", None, False) for n in ("palette.svg", "palette.png", "construction.svg",
                                                    "construction.png", "clear-space.svg", "clear-space.png",
                                                    "brand-board.png")]
@@ -81,6 +84,9 @@ def png_info(p):
 
 
 def allowed_colours(rel):
+    for key, spec in B.PROJECT_CARDS.items():
+        if rel == f"web/social-card-{key}.svg":
+            return set(B.CARD_PALETTES[spec["palette"]].values())
     for vname, v in B.VARIANTS.items():
         if f"-{vname}." in rel or rel.endswith(f"-{vname}.svg"):
             return {v["c"], v["dash"], v["text"], v["desc"]}
@@ -147,7 +153,10 @@ def main():
               ("on-dark text: Ivory on Night", B.IVORY, B.NIGHT, 4.5),
               ("on-dark descriptor text: Gold on Night", B.GOLD, B.NIGHT, 4.5),
               ("on-dark dashes: Gold on Night", B.GOLD, B.NIGHT, 3.0),
-              ("black on white", B.BLACK, B.WHITE, 4.5), ("white on black", B.WHITE, B.BLACK, 4.5)]
+              ("black on white", B.BLACK, B.WHITE, 4.5), ("white on black", B.WHITE, B.BLACK, 4.5),
+              ("red-figure card text: Clay on Kiln", B.CLAY, B.KILN, 4.5),
+              ("red-figure card dashes: Terracotta on Kiln", B.TERRACOTTA, B.KILN, 3.0),
+              ("red-figure card kicker (large text, at least 24 px): Terracotta on Kiln", B.TERRACOTTA, B.KILN, 3.0)]
     for name, a, b, target in ratios:
         r = contrast(a, b)
         print(f"  {name}: {r:.2f}:1 (target {target}:1)")
