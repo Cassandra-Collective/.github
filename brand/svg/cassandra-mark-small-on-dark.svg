@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <title>CASSANDRA mark, small</title>
+  <desc>The Forecast mark redrawn for 24 px and below, on-dark colours.</desc>
+  <g id="Layer_1" data-name="Layer 1">
+    <path d="M51.701 57.216 C38.57 67.476 19.764 65.94 8.47 53.687 C-2.823 41.435 -2.823 22.565 8.47 10.313 C19.764 -1.94 38.57 -3.476 51.701 6.784 L43.821 16.87 C35.942 10.715 24.658 11.636 17.882 18.988 C11.106 26.339 11.106 37.661 17.882 45.012 C24.658 52.364 35.942 53.285 43.821 47.13 Z" fill="#f4efe6"/>
+    <path d="M61.072 23.112 C62.843 28.905 62.843 35.095 61.072 40.888 L51.891 38.081 C53.103 34.118 53.103 29.882 51.891 25.919 Z" fill="#d2a65a"/>
+  </g>
+</svg>
