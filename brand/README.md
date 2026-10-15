@@ -135,6 +135,7 @@ Both are open-licence fonts. That matters for a public repository: the logo file
 | `web/` | `favicon.svg` and `favicon-16/32/48.png` (the small mark at every size, so the tab icon keeps one shape); `app-icon-180/192/512.png`; `avatar-500/1024.png`; `social-card.png` (the organisation, with the tagline) and `social-card-cassandra/chorus/dervish/ephesus.png`, all 1280×640 | Website heads, the GitHub organisation avatar, repository social previews |
 | `source/` | The `.vectorcraft` document behind each asset, gzip-compressed | Editing in VectorCraft |
 | `guide/` | The images in this guide | This page |
+| `LICENSE-BRAND.md` | The licence for every folder above: CC BY-ND 4.0 | Read it before using a file outside the organisation's projects |
 
 **Colour variants.**
 
@@ -260,5 +261,5 @@ The build regenerates every file in `svg/`, `pdf/`, `eps/`, `png/`, `web/`, `gui
 ## Notes
 
 - **Trademark.** The Apache Software Foundation lists "Cassandra" as a trademark of its database software. This identity is deliberately unlike Apache Cassandra's, but the name itself is shared. This is a note, not legal advice.
-- **Usage rights.** This repository has no licence file, so the logo files are not licensed for reuse by default. Whether to publish usage terms is the owner's decision.
+- **Usage rights.** The brand assets are licensed under CC BY-ND 4.0 ([`LICENSE-BRAND.md`](LICENSE-BRAND.md)): share them unmodified, with credit. The scripts in `tools/` are Apache-2.0 (`../LICENSE`). Ephesus's column and wordmark in its card stay under Ephesus's MIT licence. Chosen by the owner on 2026-10-15 (issue #13).
 - **History.** The design record is in [`docs/implementations/2026-10-14-cassandra-brand-identity.md`](../docs/implementations/2026-10-14-cassandra-brand-identity.md).

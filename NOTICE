@@ -1,0 +1,28 @@
+Cassandra-Collective/.github
+Copyright 2026 Mert Efe Şensoy
+
+This repository is licensed in two parts.
+
+1. Apache License 2.0 (LICENSE): the scripts (brand/tools/), the documentation, the
+   organisation profile, the community files and the issue and pull request templates.
+
+2. Creative Commons Attribution-NoDerivatives 4.0 International (brand/LICENSE-BRAND.md):
+   the brand assets, meaning the marks, lockups, social cards, icons, avatar, favicons, guide
+   figures and their VectorCraft sources in brand/svg/, brand/png/, brand/pdf/, brand/eps/,
+   brand/web/, brand/guide/ and brand/source/. They may be shared unmodified, with credit.
+
+The Apache License covers the scripts as software. The designs they draw, and the files
+they produce, are brand assets under CC BY-ND 4.0. Neither licence grants trademark
+rights (Apache License 2.0 section 6; CC BY-ND 4.0 section 2(b)(2)).
+
+Exceptions, under their own licences:
+
+- CODE_OF_CONDUCT.md is the Contributor Covenant 2.1 (CC BY 4.0), as its attribution says.
+- The Ionic column and pixel wordmark in brand/web/social-card-ephesus.* and
+  brand/source/social-card-ephesus.vectorcraft, and their data in
+  brand/tools/ephesus_artwork.json, come from Ephesus
+  (https://github.com/Cassandra-Collective/Ephesus): MIT License,
+  Copyright (c) 2026 Mert Efe Şensoy.
+- The letterforms in the brand files are outlines from Source Serif 4, Inter and
+  IBM Plex Mono, fonts under the SIL Open Font License 1.1. No font software is
+  distributed here.

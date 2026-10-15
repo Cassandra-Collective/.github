@@ -17,3 +17,11 @@ The organisation's home repository on GitHub.
 GitHub only shows `profile/README.md` publicly when this repository is public. A members-only profile goes in a separate repository named `.github-private`.
 
 The code of conduct, contributing guide, security policy, support guide and templates are organisation defaults: GitHub uses each one for every repository in the organisation that has no file of that type of its own. A repository's own file always takes precedence. Issue forms are all or nothing: a repository with its own issue templates or `config.yml` in `.github/ISSUE_TEMPLATE` uses none of the defaults.
+
+## Licence
+
+This repository is licensed in two parts (see [`NOTICE`](NOTICE)):
+- **Apache License 2.0** ([`LICENSE`](LICENSE)): the scripts, documentation, profile, community files and templates.
+- **CC BY-ND 4.0** ([`brand/LICENSE-BRAND.md`](brand/LICENSE-BRAND.md)): the brand assets (marks, lockups, cards, icons and their sources). They may be shared unmodified, with credit.
+
+The exceptions are listed in `NOTICE`: the code of conduct (Contributor Covenant, CC BY 4.0) and Ephesus's artwork in its card (MIT).
