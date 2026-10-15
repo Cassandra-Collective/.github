@@ -132,7 +132,7 @@ Both are open-licence fonts. That matters for a public repository: the logo file
 | `png/` | The same with transparent backgrounds: marks at 64 to 1024 px, small marks at 16, 24 and 32 px, lockups at 1x, 2x and 4x | Documents and tools that don't take SVG. Use @2x on high-density screens. |
 | `pdf/` | Marks and lockups in device RGB (the palette's sRGB values), one page each | Print shops, LaTeX (`\includegraphics`), office documents |
 | `eps/` | Marks and lockups, written as CMYK PostScript, bounding box tight to the art | Older print and sign-making workflows |
-| `web/` | `favicon.svg` and `favicon-16/32/48.png` (the small mark at every size, so the tab icon keeps one shape); `app-icon-180/192/512.png`; `avatar-500/1024.png`; `social-card.png` (the organisation, with the tagline) and `social-card-cassandra/chorus/dervish.png`, all 1280×640 | Website heads, the GitHub organisation avatar, repository social previews |
+| `web/` | `favicon.svg` and `favicon-16/32/48.png` (the small mark at every size, so the tab icon keeps one shape); `app-icon-180/192/512.png`; `avatar-500/1024.png`; `social-card.png` (the organisation, with the tagline) and `social-card-cassandra/chorus/dervish/ephesus.png`, all 1280×640 | Website heads, the GitHub organisation avatar, repository social previews |
 | `source/` | The `.vectorcraft` document behind each asset, gzip-compressed | Editing in VectorCraft |
 | `guide/` | The images in this guide | This page |
 
@@ -185,7 +185,7 @@ Each repository shows its own card when a link to it is shared:
 | CASSANDRA | `web/social-card-cassandra.png` | Red-figure |
 | CASSANDRA-Chorus | `web/social-card-chorus.png` | Red-figure |
 | Dervish | `web/social-card-dervish.png` | Bronze and night |
-| Ephesus | Its own card, from its own design system | Its own |
+| Ephesus | `web/social-card-ephesus.png` | Ephesus's own tokens (see below) |
 
 **Project card layout:**
 - The mark sits on the left. The ring is in the palette's light colour and the dashes in its accent.
@@ -202,6 +202,22 @@ The build also stops with an error if any line is wider than the 650 px text col
 **Uploading a card:** GitHub has no API for this. In the repository, go to **Settings**, then **General**, then **Social preview**, then **Edit**, then **Upload an image**. The image must be under 1 MB; these are about 30 KB.
 
 <img src="web/social-card-chorus.png" alt="CASSANDRA Chorus social card" width="400"> <img src="web/social-card-dervish.png" alt="Dervish social card" width="400">
+
+### The Ephesus card
+
+Ephesus keeps its own identity, so its card uses the same layout as the others but is drawn entirely to Ephesus's `docs/design/UI-DESIGN.md`:
+- **Mark:** its pixel Ionic column, in place of the Forecast mark.
+- **Name:** its pixel wordmark, in place of the serif name.
+- **Colours:** only its section 2 tokens (ink, marble, terracotta), seven in all.
+- **Type:** IBM Plex Mono for the kicker, headline, pitch and addresses.
+
+The pitch is the Phase 9 one the owner chose on 2026-10-15: "An agentic harness you govern and measure". It shows both `ephesushq.com` and the repository address.
+
+- **The artwork is data:** `tools/ephesus_artwork.json` holds the column and wordmark rects, copied from Ephesus's own card (its commit `4e3779a`, MIT), with that source recorded in the file.
+- **Fonts first:** VectorCraft does not bundle IBM Plex Mono. Run `python brand/tools/install_ephesus_fonts.py <Ephesus checkout>` once, with a Python that has fontTools and brotli. It converts Ephesus's WOFF2 files and installs them into VectorCraft's Fonts folder. Without them the build stops rather than falling back to another face.
+- **Ephesus's own copy:** `python brand/tools/build_brand.py --ephesus-out <Ephesus checkout>` also writes that repository's `docs/brand/ephesus-social-card.svg`, `site/public/img/social-card.svg` and `site/public/img/social-card.png`. That SVG keeps live text, as Ephesus's card always has. It is normalised to Ephesus's file rules (token colours in upper case, integer coordinates, `crispEdges`, Plex Mono with fallbacks) and checked against them before it is written.
+
+<img src="web/social-card-ephesus.png" alt="Ephesus social card" width="400">
 
 ## Projects
 
@@ -230,6 +246,8 @@ Requires VectorCraft 0.10 or later (`vectorcraft-cli` on the default install pat
 python brand/tools/build_brand.py
 python brand/tools/check_brand.py
 ```
+
+The Ephesus card needs IBM Plex Mono installed in VectorCraft first; see "The Ephesus card" above.
 
 The build regenerates every file in `svg/`, `pdf/`, `eps/`, `png/`, `web/`, `guide/` and `source/` in about 20 seconds. The check verifies the following and exits non-zero on any failure:
 
