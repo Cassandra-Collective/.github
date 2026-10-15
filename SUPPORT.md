@@ -4,17 +4,17 @@ This guide covers every repository in the [Cassandra Collective](https://github.
 
 ## Where to ask
 
-Ask in the repository your question is about, as an issue labelled `question`:
+Ask in the **Discussions** of the repository your question is about, in its **Q&A** category. There an answer can be marked as the answer, and the next person with the same question finds it:
 
-| Project | Ask a question | Earlier questions |
+| Project | Ask a question | Questions tracked as issues |
 |---|---|---|
-| CASSANDRA | [New issue](https://github.com/Cassandra-Collective/CASSANDRA/issues/new/choose) | [`question` issues](https://github.com/Cassandra-Collective/CASSANDRA/issues?q=is%3Aissue+label%3Aquestion) |
-| CASSANDRA-Chorus | [New issue](https://github.com/Cassandra-Collective/CASSANDRA-Chorus/issues/new/choose) | [`question` issues](https://github.com/Cassandra-Collective/CASSANDRA-Chorus/issues?q=is%3Aissue+label%3Aquestion) |
-| Dervish | [New issue](https://github.com/Cassandra-Collective/Dervish/issues/new/choose) | [`question` issues](https://github.com/Cassandra-Collective/Dervish/issues?q=is%3Aissue+label%3Aquestion) |
-| Ephesus | [New issue](https://github.com/Cassandra-Collective/Ephesus/issues/new/choose) | [`question` issues](https://github.com/Cassandra-Collective/Ephesus/issues?q=is%3Aissue+label%3Aquestion) |
-| `.github` (profile and brand) | [New issue](https://github.com/Cassandra-Collective/.github/issues/new/choose) | [`question` issues](https://github.com/Cassandra-Collective/.github/issues?q=is%3Aissue+label%3Aquestion) |
+| CASSANDRA | [Discussions, Q&A](https://github.com/Cassandra-Collective/CASSANDRA/discussions/categories/q-a) | [`question` issues](https://github.com/Cassandra-Collective/CASSANDRA/issues?q=is%3Aissue+label%3Aquestion) |
+| CASSANDRA-Chorus | [Discussions, Q&A](https://github.com/Cassandra-Collective/CASSANDRA-Chorus/discussions/categories/q-a) | [`question` issues](https://github.com/Cassandra-Collective/CASSANDRA-Chorus/issues?q=is%3Aissue+label%3Aquestion) |
+| Dervish | [Discussions, Q&A](https://github.com/Cassandra-Collective/Dervish/discussions/categories/q-a) | [`question` issues](https://github.com/Cassandra-Collective/Dervish/issues?q=is%3Aissue+label%3Aquestion) |
+| Ephesus | [Discussions, Q&A](https://github.com/Cassandra-Collective/Ephesus/discussions/categories/q-a) | [`question` issues](https://github.com/Cassandra-Collective/Ephesus/issues?q=is%3Aissue+label%3Aquestion) |
+| `.github` (profile and brand) | [Discussions, Q&A](https://github.com/Cassandra-Collective/.github/discussions/categories/q-a) | [`question` issues](https://github.com/Cassandra-Collective/.github/issues?q=is%3Aissue+label%3Aquestion) |
 
-Every repository offers a **Question** form on its new-issue page: use it, and it adds the label for you. Blank issues are switched off across the organisation, so the forms are the way in.
+When a question turns out to need work (a bug, a missing document), a maintainer turns it into an issue. If you want a question tracked as an issue from the start, every repository also offers a **Question** form on its new-issue page, which adds the label for you. Blank issues are switched off across the organisation, so the forms are the way into the issue tracker.
 
 If your question is about the organisation as a whole, ask it in the `.github` repository.
 
