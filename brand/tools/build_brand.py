@@ -11,8 +11,11 @@ pure function of the numbers in this file and the engine version.
 Geometry is defined in units of the mark's outer diameter D (mark) or of the mark height
 H (lockups); see brand/README.md and docs/implementations/2026-10-14-cassandra-brand-identity.md.
 """
+import json
 import math
 import os
+import re
+import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -78,6 +81,27 @@ PROJECT_CARDS = {
                     line=["A Muon-variant optimizer with", "a provably bounded spectrum."]),
 }
 KICKER = dict(text="CASSANDRA COLLECTIVE", font="Inter", style="Medium", tracking=350)
+
+# The Ephesus card (owner decisions 2026-10-15): card A, the Collective's project-card layout
+# drawn entirely in Ephesus's own identity (docs/design/UI-DESIGN.md in Ephesus): its section 2
+# tokens, its pixel column and wordmark (vendored in ephesus_artwork.json), and IBM Plex Mono.
+EPH_INK900, EPH_INK700, EPH_MARBLE100 = "#221A14", "#4A3B2C", "#F4EDE0"
+EPH_TERRACOTTA = "#C4552D"
+EPH_TOKENS = {EPH_INK900, EPH_INK700, EPH_MARBLE100, EPH_TERRACOTTA, "#E8A987", "#E7DCC6", "#D3C4A5"}
+EPH_MONO, EPH_MONO_MEDIUM = "IBM Plex Mono", "IBM Plex Mono Medium"  # install_ephesus_fonts.py
+EPHESUS_CARD = dict(
+    kicker="A CASSANDRA COLLECTIVE PROJECT",
+    headline="An agentic harness you govern and measure",
+    line=["Every agent works behind your gates;", "the harness is scored by its own bench."],
+    footer=["pre-alpha · MIT · ephesushq.com", "github.com/Cassandra-Collective/Ephesus"],
+    aria="Ephesus, an agentic harness you govern and measure",
+)
+# Integer layout. The column (64-unit master at 6x, frame box left out) is centred on (290, 320)
+# like the other project cards' mark; the text column starts at x 520 and is the wordmark's
+# 533 px wide.
+EPH_LAYOUT = dict(column_t=(98, 116), scale=6, text_x=520, text_w=533, kicker_base=150, word_top=172,
+                  rule_gap=26, rule_h=6, head_gap=44, line_gap=40, line_step=30, footer_gap=52,
+                  footer_step=28, kicker_size=16, kicker_tracking=120, text_size=21, footer_size=18)
 # kicker_h 19 sets the kicker at about 26 px, WCAG "large text" (24 px and up), where 3:1 is enough
 # for terracotta on kiln black (3.30:1); build_project_cards checks this.
 CARD = dict(mark_d=300, mark_cx=290, text_x=520, text_w=650, kicker_h=19, name_h=62, name_lead=1.45,
@@ -331,6 +355,103 @@ def build_project_cards(vc):
         export(vc, f"social-card-{key}", pdf_eps=False, web=True, png=[("", 1)])
 
 
+def require_fonts(vc, families):
+    for family in families:
+        try:
+            vc.cmd("text.fontList", family=family)
+        except RuntimeError:
+            raise SystemExit(f"VectorCraft has no font family '{family}'. Install it first:\n"
+                             "  python brand/tools/install_ephesus_fonts.py <path to an Ephesus checkout>")
+
+
+def live_text(vc, s, x, baseline, size, font, fill, tracking=0):
+    """Point type with its baseline at (x, baseline). Returns (id, bounds)."""
+    t = vc.tool("add_text", x=x, y=baseline, text=s, font=font, size=size, color=fill)["id"]
+    if tracking:
+        vc.cmd("text.setStyle", id=t, tracking=tracking)
+    return t, bounds(vc, t)
+
+
+def ephesus_svg(svg):
+    """Normalise VectorCraft's live-text SVG to Ephesus's file rules, then check them."""
+    mono = "&apos;IBM Plex Mono&apos;,&apos;DejaVu Sans Mono&apos;,monospace"
+    svg = svg.replace('font-family="&apos;IBM Plex Mono Medium&apos;"', f'font-family="{mono}" font-weight="500"')
+    svg = svg.replace('font-family="&apos;IBM Plex Mono&apos;"', f'font-family="{mono}"')
+    svg = re.sub(r"#([0-9a-fA-F]{6})", lambda m: "#" + m.group(1).upper(), svg)
+    svg = re.sub(r'(<svg\b[^>]*?viewBox="0 0 1280 640")',
+                 r'\1 shape-rendering="crispEdges" role="img" aria-label="' + EPHESUS_CARD["aria"] + '"',
+                 svg, count=1)
+    colours = set(re.findall(r"#[0-9A-F]{6}", svg))
+    fractional = re.findall(r'(?:\b(?:x|y|width|height)="-?\d*\.\d+")|(?:\bd="[^"]*\d\.\d)|(?:matrix\([^)]*\d\.\d)', svg)
+    families = set(re.findall(r'font-family="([^"]*)"', svg))
+    problems = []
+    if not colours <= EPH_TOKENS:
+        problems.append(f"colours outside the tokens: {sorted(colours - EPH_TOKENS)}")
+    if fractional:
+        problems.append(f"fractional coordinates: {fractional[:3]}")
+    if families != {mono}:
+        problems.append(f"unexpected font families: {families}")
+    if 'shape-rendering="crispEdges"' not in svg:
+        problems.append("crispEdges missing on the root")
+    if problems:
+        raise ValueError("Ephesus card SVG breaks Ephesus's rules: " + "; ".join(problems))
+    return svg
+
+
+def build_ephesus_card(vc, ephesus_out=None):
+    """Card A for Ephesus (see the constants above). Writes web/social-card-ephesus.{svg,png}
+    and its source with outlined text; with ephesus_out (an Ephesus checkout) also writes that
+    repository's docs/brand/ephesus-social-card.svg, site/public/img/social-card.svg and
+    site/public/img/social-card.png, with live text normalised by ephesus_svg()."""
+    require_fonts(vc, (EPH_MONO, EPH_MONO_MEDIUM))
+    art = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ephesus_artwork.json"),
+                         encoding="utf-8"))
+    c, p = EPH_LAYOUT, EPHESUS_CARD
+    new_doc(vc, "social-card-ephesus", 1280, 640, "Ephesus", p["aria"])
+    rect(vc, 0, 0, 1280, 640, EPH_INK900)
+    rect(vc, 8, 8, 1264, 624, EPH_MARBLE100)
+    tx, ty = c["column_t"]
+    for x, y, w, h, fill in art["column"]["rects"][2:]:      # the first two are the frame box
+        rect(vc, tx + x * c["scale"], ty + y * c["scale"], w * c["scale"], h * c["scale"], fill)
+    ox, oy = art["wordmark"]["origin"]
+    for x, y, w, h, fill in art["wordmark"]["rects"]:
+        rect(vc, x - ox + c["text_x"], y - oy + c["word_top"], w, h, fill)
+    rule_y = c["word_top"] + 91 + c["rule_gap"]
+    rect(vc, c["text_x"], rule_y, c["text_w"], c["rule_h"], EPH_TERRACOTTA)
+    x0, head = c["text_x"], rule_y + c["rule_h"] + c["head_gap"]
+    lines = [(p["kicker"], c["kicker_base"], c["kicker_size"], EPH_MONO_MEDIUM, EPH_INK700, c["kicker_tracking"]),
+             (p["headline"], head, c["text_size"], EPH_MONO_MEDIUM, EPH_INK900, 0)]
+    lines += [(s, head + c["line_gap"] + i * c["line_step"], c["text_size"], EPH_MONO, EPH_INK900, 0)
+              for i, s in enumerate(p["line"])]
+    foot = head + c["line_gap"] + c["line_step"] * (len(p["line"]) - 1) + c["footer_gap"]
+    lines += [(s, foot + i * c["footer_step"], c["footer_size"], EPH_MONO, EPH_INK700, 0)
+              for i, s in enumerate(p["footer"])]
+    ids = []
+    for s, base, size, font, fill, track in lines:
+        t, b = live_text(vc, s, x0, base, size, font, fill, track)
+        if b["x"] + b["width"] > x0 + c["text_w"]:
+            raise ValueError(f"Ephesus card: '{s}' ends at {b['x'] + b['width']:.0f}, past {x0 + c['text_w']}")
+        print(f"  ephesus card: {b['width']:6.1f} px  {s}")
+        ids.append(t)
+    if ephesus_out:
+        tmp = os.path.join(BRAND, ".ephesus-card")
+        os.makedirs(tmp, exist_ok=True)
+        try:
+            vc.tool("export", path=os.path.join(tmp, "card.svg"))
+            vc.tool("export", path=os.path.join(tmp, "card.png"))
+            svg = ephesus_svg(open(os.path.join(tmp, "card.svg"), encoding="utf-8").read())
+            for rel in (("docs", "brand", "ephesus-social-card.svg"), ("site", "public", "img", "social-card.svg")):
+                with open(os.path.join(ephesus_out, *rel), "w", encoding="utf-8", newline="\n") as f:
+                    f.write(svg)
+            shutil.copyfile(os.path.join(tmp, "card.png"), os.path.join(ephesus_out, "site", "public", "img", "social-card.png"))
+            print(f"  ephesus card: wrote 3 files into {ephesus_out}")
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+    vc.cmd("select.set", ids=ids)
+    vc.cmd("type.createOutlines")
+    export(vc, "social-card-ephesus", pdf_eps=False, web=True, png=[("", 1)])
+
+
 def build_guide(vc):
     # Palette with names, hex codes and contrast ratios.
     swatches = [("Night", NIGHT, "Base: ring, wordmark, dark grounds",
@@ -427,6 +548,11 @@ def build_board(vc):
 
 
 def main():
+    ephesus_out = None
+    if "--ephesus-out" in sys.argv:
+        ephesus_out = os.path.abspath(sys.argv[sys.argv.index("--ephesus-out") + 1])
+        if not os.path.isdir(os.path.join(ephesus_out, "docs", "brand")):
+            raise SystemExit(f"--ephesus-out: {ephesus_out} is not an Ephesus checkout")
     for d in DIRS.values():
         os.makedirs(d, exist_ok=True)
     with VC(BRAND) as vc:
@@ -435,6 +561,7 @@ def main():
         build_lockups(vc)
         build_web(vc)
         build_project_cards(vc)
+        build_ephesus_card(vc, ephesus_out)
         build_guide(vc)
         build_board(vc)
     print("done")

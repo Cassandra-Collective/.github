@@ -62,7 +62,7 @@ def expected_files():
             ("web/avatar-1024.png", (1024, 1024), False)]
     out += [("web/social-card.svg", None, False), ("web/social-card.png", (1280, 640), False)]
     out += [(f"source/{n}.vectorcraft", None, False) for n in ("favicon", "app-icon", "avatar", "social-card")]
-    for k in B.PROJECT_CARDS:
+    for k in list(B.PROJECT_CARDS) + ["ephesus"]:
         out += [(f"web/social-card-{k}.svg", None, False), (f"web/social-card-{k}.png", (1280, 640), False),
                 (f"source/social-card-{k}.vectorcraft", None, False)]
     out += [(f"guide/{n}", None, False) for n in ("palette.svg", "palette.png", "construction.svg",
@@ -93,6 +93,8 @@ def png_info(p):
 
 
 def allowed_colours(rel):
+    if rel == "web/social-card-ephesus.svg":
+        return B.EPH_TOKENS
     for pv, v in B.PROJECT_MARK_VARIANTS.items():
         if f"-{pv}." in rel or f"-{pv}-" in rel:
             return {v["c"], v["dash"]}
@@ -172,7 +174,10 @@ def main():
               ("red-figure mark on light: Kiln on GitHub white", B.KILN, GITHUB_LIGHT, 3.0),
               ("red-figure mark on light: Terracotta on GitHub white", B.TERRACOTTA, GITHUB_LIGHT, 3.0),
               ("red-figure mark on dark: Clay on GitHub dark", B.CLAY, GITHUB_DARK, 3.0),
-              ("red-figure mark on dark: Terracotta on GitHub dark", B.TERRACOTTA, GITHUB_DARK, 3.0)]
+              ("red-figure mark on dark: Terracotta on GitHub dark", B.TERRACOTTA, GITHUB_DARK, 3.0),
+              ("Ephesus card text: ink-900 on marble-100", B.EPH_INK900, B.EPH_MARBLE100, 4.5),
+              ("Ephesus card kicker and footer: ink-700 on marble-100", B.EPH_INK700, B.EPH_MARBLE100, 4.5),
+              ("Ephesus card rule: terracotta on marble-100", B.EPH_TERRACOTTA, B.EPH_MARBLE100, 3.0)]
     for name, a, b, target in ratios:
         r = contrast(a, b)
         print(f"  {name}: {r:.2f}:1 (target {target}:1)")
