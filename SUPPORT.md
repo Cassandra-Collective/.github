@@ -14,7 +14,7 @@ Ask in the repository your question is about, as an issue labelled `question`:
 | Ephesus | [New issue](https://github.com/Cassandra-Collective/Ephesus/issues/new/choose) | [`question` issues](https://github.com/Cassandra-Collective/Ephesus/issues?q=is%3Aissue+label%3Aquestion) |
 | `.github` (profile and brand) | [New issue](https://github.com/Cassandra-Collective/.github/issues/new/choose) | [`question` issues](https://github.com/Cassandra-Collective/.github/issues?q=is%3Aissue+label%3Aquestion) |
 
-Where a repository offers a **Question** form, use it: it adds the label for you. Where it does not, or you cannot set labels, start the title with "Question:" and a maintainer will label it.
+Every repository offers a **Question** form on its new-issue page: use it, and it adds the label for you. Blank issues are switched off across the organisation, so the forms are the way in.
 
 If your question is about the organisation as a whole, ask it in the `.github` repository.
 

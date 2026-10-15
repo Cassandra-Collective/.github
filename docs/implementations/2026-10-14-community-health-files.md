@@ -35,7 +35,7 @@ The owner asked, on 2026-10-14, for a contributing guide, a code of conduct and 
 | `.github/ISSUE_TEMPLATE/bug-report.yml` | Default issue form for a bug report, labelled `bug`. |
 | `.github/ISSUE_TEMPLATE/feature-or-improvement.yml` | Default issue form for a feature or improvement, labelled `enhancement`. |
 | `.github/ISSUE_TEMPLATE/question.yml` | Default issue form for a question, labelled `question`. |
-| `.github/ISSUE_TEMPLATE/config.yml` | Template chooser: blank issues allowed, contact links to the security policy and the code of conduct. |
+| `.github/ISSUE_TEMPLATE/config.yml` | Template chooser: blank issues off (see the update below), contact links to the security policy and the code of conduct. |
 | `.github/pull_request_template.md` | Default pull request template: what changes, the issue it closes, evidence, docs updated, checklist. |
 | `README.md` | The table lists the new files, and a sentence explains that GitHub applies them as organisation defaults. |
 | `docs/implementations/2026-10-14-community-health-files.md` | This document. |
@@ -90,6 +90,7 @@ None. This is a documentation and configuration change.
 | Markdown policies at the root; pull request template in `.github/` | All in `.github/`; all at the root | The root matches the links in the parallel pull requests; GitHub accepts all three locations | Engineering |
 | Absolute URLs in every default file | Relative links | Defaults are displayed in other repositories' contexts | Engineering |
 | `blank_issues_enabled: true` | `false` | Friendlier for a small organisation, and a typo report needs no form; matches Ephesus | Engineering default, stated for review |
+| Update, 2026-10-14: `blank_issues_enabled: false` | Keeping blank issues | The owner turned blank issues off in every repository, so that every issue arrives through a form with its label. So that a question always has a route, every repository now has a Question form, and `SUPPORT.md` no longer describes a blank-issue fallback | Owner, 2026-10-14 |
 | Labels `bug`, `enhancement`, `question` only | Adding `needs-triage` or `documentation` forms | They exist in every repository today, so the forms work wherever they are shown | Engineering |
 | Response times stated as aims ("a few days"), never as guarantees | A fixed service level | A small, volunteer-run organisation cannot promise one; the wording matches Ephesus | Engineering, following the owner's brief |
 | `SUPPORT.md` also applies to Ephesus | Leaving Ephesus without one; adding one to Ephesus | Ephesus must not be touched; the default is generic enough to fit it | Engineering, stated for review |
