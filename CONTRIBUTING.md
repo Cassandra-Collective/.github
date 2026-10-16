@@ -33,7 +33,7 @@ Everyone taking part follows the [code of conduct](https://github.com/Cassandra-
    - [`help wanted`](https://github.com/search?q=org%3ACassandra-Collective+label%3A%22help+wanted%22+state%3Aopen&type=issues): tasks where help is especially welcome.
 3. Comment on the issue to say you would like to take it, and wait for a maintainer to confirm, so that two people do not do the same work.
 
-Questions are welcome: see [getting help](https://github.com/Cassandra-Collective/.github/blob/main/SUPPORT.md).
+Questions are welcome: ask in the repository's Discussions, in its Q&A category, and see [getting help](https://github.com/Cassandra-Collective/.github/blob/main/SUPPORT.md).
 
 ## How a change gets in
 
