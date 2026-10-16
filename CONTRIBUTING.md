@@ -55,4 +55,4 @@ Never report a vulnerability in a public issue. Follow the [security policy](htt
 - **The community files here are defaults for the whole organisation.** A change to `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md` or the templates in `.github/` reaches every repository that has no file of its own, so open an issue first.
 - **Every meaningful change has an implementation document,** `docs/implementations/YYYY-MM-DD-<slug>.md`, copied from [`docs/implementations/_TEMPLATE.md`](https://github.com/Cassandra-Collective/.github/blob/main/docs/implementations/_TEMPLATE.md).
 - **Prose style:** plain English, and no em or en dashes; use a comma, a colon, a middle dot or a new sentence.
-- **Licence:** this repository has no licence file, so the brand files are not licensed for reuse by default. Ask before using them outside the organisation's projects.
+- **Licence:** you contribute under the Apache License 2.0 (`LICENSE`), including changes to the brand scripts and any brand files rebuilt from them. The repository publishes the brand files under CC BY-ND 4.0 (`brand/LICENSE-BRAND.md`). `NOTICE` lists the exceptions.
