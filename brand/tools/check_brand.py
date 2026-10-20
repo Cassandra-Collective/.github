@@ -133,6 +133,104 @@ def check_svg(p, rel):
             fail(f"{rel}: colours outside its variant: {sorted(extra)}")
 
 
+def hex_rgb(h):
+    """(r, g, b) floats in 0..1 for a #RRGGBB palette value."""
+    return tuple(int(h[i:i + 2], 16) / 255 for i in (1, 3, 5))
+
+
+def variant_of(rel):
+    """Palette variant a pdf/ or eps/ deliverable paints with, from its file stem."""
+    stem = rel.rsplit("/", 1)[-1].rsplit(".", 1)[0]
+    names = list(B.VARIANTS) + list(B.PROJECT_MARK_VARIANTS)
+    for vname in sorted(names, key=len, reverse=True):  # red-figure-on-light before on-light
+        if stem.endswith("-" + vname):
+            return vname
+    return None
+
+
+def variant_hexes(vname):
+    spec = B.VARIANTS.get(vname) or B.PROJECT_MARK_VARIANTS[vname]
+    return {spec[k] for k in ("c", "dash", "text", "desc") if k in spec}
+
+
+# Colour operators that paint: numbers on the stack, then the operator. A name before cs/CS
+# selects a colour space, which is also a change worth failing on. Everything else that text
+# searches can hit (the EPS prolog's `/rg {setrgbcolor} bd` alias definitions, ASCII85
+# thumbnail data inside PostScript comments) carries no preceding numbers and never paints.
+NUM_OP = rb"(-?[\d.]+(?: +-?[\d.]+)*) (%s)\b" % b"|".join(
+    [b"rg", b"RG", b"g", b"G", b"k", b"K", b"sc", b"SC", b"scn", b"SCN",
+     b"setrgbcolor", b"setgray", b"setcmykcolor"])
+NAME_CS = rb"/[A-Za-z0-9]+ (cs|CS)\b"
+TOL = 1e-4  # PDFs print n/255 to 8 decimals, EPS CMYK to 4; both compare exact at this width
+
+
+def close(a, b):
+    return len(a) == len(b) and all(abs(x - y) <= TOL for x, y in zip(a, b))
+
+
+def pdf_streams(p):
+    """Decompressed (or unfiltered) contents of every stream in a small PDF."""
+    data = open(p, "rb").read()
+    for m in re.finditer(rb"<<(.*?)>>\s*stream\r?\n(.*?)endstream", data, re.S):
+        dct, raw = m.group(1), m.group(2)
+        if b"FlateDecode" in dct:
+            try:
+                yield zlib.decompress(raw)
+            except zlib.error:
+                continue
+        elif b"Filter" not in dct:
+            yield raw
+
+
+def check_pdf(p, rel):
+    vname = variant_of(rel)
+    if vname is None:
+        return
+    expected = [hex_rgb(h) for h in variant_hexes(vname)]
+    painted = set()
+    for stream in pdf_streams(p):
+        for nums, op in re.findall(NUM_OP, stream):
+            op = op.decode()
+            vals = tuple(float(x) for x in nums.split())
+            if op in ("rg", "RG") and len(vals) == 3:
+                painted.add(vals)
+            else:
+                fail(f"{rel}: paints with {op} ({nums.decode()})")
+        if re.search(NAME_CS, stream):
+            fail(f"{rel}: selects a named colour space")
+    if not painted:
+        fail(f"{rel}: paints no colours")
+    for rgb in sorted(painted):
+        if not any(close(rgb, e) for e in expected):
+            fail(f"{rel}: paints {rgb} outside its variant {vname}")
+
+
+def check_eps(p, rel):
+    vname = variant_of(rel)
+    if vname is None:
+        return
+    data = open(p, "rb").read()
+    if data[:4] != b"\xc5\xd0\xd3\xc6":
+        return fail(f"{rel}: not a DOS EPS (bad magic)")
+    off, ln = struct.unpack("<II", data[4:12])
+    ps = data[off:off + ln].decode("latin-1")
+    ps = re.sub(r"%[^\n]*", "", ps)  # comments, including the ASCII85 thumbnail
+    expected = [B.EPS_CMYK[h] for h in variant_hexes(vname)]
+    painted = set()
+    for nums, op in re.findall(NUM_OP, ps.encode("latin-1")):
+        op = op.decode()
+        vals = tuple(float(x) for x in nums.split())
+        if op == "k" and len(vals) == 4:
+            painted.add(vals)
+        else:
+            fail(f"{rel}: paints with {op} ({nums.decode()})")
+    if not painted:
+        fail(f"{rel}: paints no colours")
+    for cmyk in sorted(painted):
+        if not any(close(cmyk, e) for e in expected):
+            fail(f"{rel}: paints {cmyk} outside its variant {vname}")
+
+
 def main():
     base = B.BRAND
     files = expected_files()
@@ -160,6 +258,19 @@ def main():
             if alpha and (ctype != 6 or corner != 0):
                 fail(f"{rel}: not transparent (colour type {ctype}, top-left alpha {corner})")
     report("files, SVG hygiene and PNG sizes", len(files))
+
+    n = 0
+    for rel, _, _ in files:
+        p = os.path.join(base, rel)
+        if not os.path.isfile(p):
+            continue
+        if rel.endswith(".pdf"):
+            check_pdf(p, rel)
+            n += 1
+        elif rel.endswith(".eps"):
+            check_eps(p, rel)
+            n += 1
+    report("PDF and EPS colours", n)
 
     ratios = [("on-light text: Night on Ivory", B.NIGHT, B.IVORY, 4.5),
               ("on-light descriptor text: Bronze on Ivory", B.BRONZE, B.IVORY, 4.5),
