@@ -38,6 +38,24 @@ PROJECT_MARK_VARIANTS = {
     "red-figure-on-dark": dict(c=CLAY, dash=TERRACOTTA),
 }
 
+# Expected CMYK painted in the EPS exports, keyed by palette hex. Night, Bronze, Gold and
+# Ivory are the guide's colour table (VectorCraft's "Generic CMYK (SWOP-like)" conversion,
+# relative colorimetric, black-point compensation); Black, White and the Red-figure colours
+# have no guide entry and are recorded from the exports themselves (2026-10-20), as the same
+# conversion of their hex values. check_brand.py compares every EPS `k` operator against this
+# table, so a VectorCraft or build change that alters the conversion fails the check.
+EPS_CMYK = {
+    NIGHT: (0.8491, 0.7010, 0.4192, 0.6388),
+    BRONZE: (0.2683, 0.3927, 0.8154, 0.3379),
+    GOLD: (0.1505, 0.2883, 0.6480, 0.0576),
+    IVORY: (0.0484, 0.0413, 0.0872, 0.0),
+    BLACK: (0.6666, 0.6666, 0.6665, 1.0),
+    WHITE: (0.0, 0.0, 0.0, 0.0),
+    KILN: (0.3759, 0.3988, 0.4289, 0.9482),
+    TERRACOTTA: (0.1856, 0.7577, 0.8702, 0.1469),
+    CLAY: (0.0540, 0.0550, 0.1217, 0.0),
+}
+
 # Colour variants: C = the ring, dash = the forecast, text = wordmark, desc = descriptor.
 VARIANTS = {
     "on-light": dict(c=NIGHT, dash=BRONZE, text=NIGHT, desc=BRONZE, ground=IVORY),
